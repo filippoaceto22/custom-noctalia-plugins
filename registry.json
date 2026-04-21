@@ -1,10 +1,11 @@
 {
   "version": 1,
+  "generatedAt": "2026-04-21T20:34:33.120Z",
   "plugins": [
     {
       "id": "hyprland-display-manager",
       "name": "Hyprland Display Manager",
-      "version": "1.0.2",
+      "version": "1.0.4",
       "official": false,
       "author": "Filippo",
       "description": "Monitor layout manager",
@@ -15,7 +16,7 @@
         "Bar",
         "Panel"
       ],
-      "lastUpdated": "2026-04-21T22:27:46+02:00"
+      "lastUpdated": "2026-04-21T22:34:25+02:00"
     }
   ]
 }
