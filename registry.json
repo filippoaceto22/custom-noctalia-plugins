@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "plugins": [
+    {
+      "id": "hyprland-display-manager",
+      "name": "Hyprland Display Manager",
+      "version": "1.0.0",
+      "official": false,
+      "author": "Filippo",
+      "description": "Monitor layout manager",
+      "repository": "https://github.com/filippoaceto22/custom-noctalia-plugins",
+      "minNoctaliaVersion": "3.6.0",
+      "license": "GPL-3.0-or-later",
+      "tags": [
+        "Bar",
+        "Panel"
+      ],
+      "lastUpdated": "2026-04-21T21:59:11+02:00"
+    }
+  ]
+}
