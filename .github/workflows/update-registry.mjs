@@ -116,7 +116,7 @@ function generateRegistry(plugins) {
 
   return {
     version: REGISTRY_VERSION,
-    generatedAt: new Date().toISOString(), // 👈 QUESTO
+    generatedAt: new Date().toISOString(), 
     plugins
   };
 }
