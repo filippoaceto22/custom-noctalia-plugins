@@ -135,11 +135,5 @@ function setPrimary(m) {
             root.refresh()
         }
 
-
-
-        function test() {
-            console.log("Test IPC received")
-        }
-
     }
 }
