@@ -1,0 +1,8 @@
+{
+  "scriptsPath": "~/.config/hypr/scripts/displayctl",
+  "autoApply": true,
+  "defaultLayout": "line-right",
+  "enableWindowsSelection": true,
+  "enableCross": true,
+  "screenshotEditor": "swappy"
+}
