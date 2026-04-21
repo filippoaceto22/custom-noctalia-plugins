@@ -1,44 +1,56 @@
 name: Update Plugin Registry
-
 on:
   push:
     branches:
       - main
+    paths:
+      - '**/manifest.json'
+      - '.github/workflows/update-registry.mjs'
+  workflow_dispatch:
 
 jobs:
   update-registry:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
-      - uses: actions/setup-node@v4
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
-
-      - run: node scripts/update-registry.mjs
-
-      - name: Debug registry
-        run: cat registry.json
-
+          node-version: 24
+      
+      - name: Run registry update script
+        run: node .github/workflows/update-registry.mjs
+      
       - name: Check for changes
         id: check_changes
         run: |
-          if [[ -n $(git status --porcelain registry.json) ]]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-          else
+          if git diff --quiet registry.json; then
             echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes to registry.json"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in registry.json"
           fi
-
-      - name: Commit and push
+      
+      - name: Commit and push changes
         if: steps.check_changes.outputs.changed == 'true'
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add registry.json
-          git commit -m "update registry"
+          git commit -m "chore: update plugin registry [skip ci]"
           git push
+      
+      - name: Upload registry artifact
+        if: steps.check_changes.outputs.changed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: updated-registry
+          path: registry.json
