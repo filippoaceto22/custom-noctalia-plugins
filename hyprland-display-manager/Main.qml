@@ -135,10 +135,6 @@ function setPrimary(m) {
             root.refresh()
         }
 
-        function setLayout(layout) {
-            pendingLayout = layout
-            run(`${monitorScript} set-layout ${layout} && ${monitorScript} set-ws-per-monitor ${pendingWs}`)
-        }
 
     }
 }
