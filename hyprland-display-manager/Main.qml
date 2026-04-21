@@ -134,10 +134,5 @@ function setPrimary(m) {
         function refresh() {
             root.refresh()
         }
-
-
-        function setworkspaces() {
-           pendingWs--
-        }
     }
 }
