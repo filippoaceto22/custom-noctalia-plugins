@@ -112,12 +112,12 @@ function scanPlugins() {
  * Generate the registry.json content
  */
 function generateRegistry(plugins) {
-  // Sort plugins by ID for consistent output
   plugins.sort((a, b) => a.id.localeCompare(b.id));
 
   return {
     version: REGISTRY_VERSION,
-    plugins: plugins
+    generatedAt: new Date().toISOString(), // 👈 QUESTO
+    plugins
   };
 }
 
