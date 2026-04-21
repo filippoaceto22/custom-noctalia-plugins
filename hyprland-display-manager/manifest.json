@@ -5,7 +5,7 @@
   "minNoctaliaVersion": "3.6.0",
   "author": "Filippo",
   "license": "GPL-3.0-or-later",
-  "description": "Monitor layout manager",
+  "description": "Monitor layout manager ",
   "tags": ["Bar", "Panel"],
   "repository": "https://github.com/filippoaceto22/custom-noctalia-plugins",
   "entryPoints": {
