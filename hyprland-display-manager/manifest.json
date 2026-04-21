@@ -1,7 +1,7 @@
 {
   "id": "hyprland-display-manager",
   "name": "Hyprland Display Manager",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "minNoctaliaVersion": "3.6.0",
   "author": "Filippo",
   "license": "GPL-3.0-or-later",
