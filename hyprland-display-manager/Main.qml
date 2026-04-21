@@ -136,6 +136,7 @@ function setPrimary(m) {
         }
 
 
+
         function test() {
             console.log("Test IPC received")
         }
