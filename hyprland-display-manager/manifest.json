@@ -6,6 +6,7 @@
   "author": "Filippo",
   "license": "GPL-3.0-or-later",
   "description": "Monitor layout manager",
+  "tags": ["Bar", "Panel"],
   "entryPoints": {
     "main": "Main.qml",
     "barWidget": "BarWidget.qml",
