@@ -6,6 +6,11 @@ on:
     paths:
       - '**/manifest.json'
       - '.github/workflows/update-registry.mjs'
+    pull_request:
+     branches:
+      - main
+    paths:
+      - '**/manifest.json'  
   workflow_dispatch:
 
 jobs:
