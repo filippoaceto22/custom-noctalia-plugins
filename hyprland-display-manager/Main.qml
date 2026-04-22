@@ -26,8 +26,16 @@ Item {
     // =========================
     // PATH SCRIPT
     // =========================
-    property string monitorScript: "~/.config/configHyprland/listeners/monitor-autogen-noctalia.sh"
-    property string stateScript: "~/.config/hypr/conf/monitors/monitor-ui-state.sh"
+
+    property string configuredScriptPath: pluginApi?.pluginSettings?.scriptPath
+                                         ?? pluginApi?.manifest?.metadata?.defaultSettings?.scriptPath
+                                         ?? ""
+
+    //property string monitorScript: "/home/filippo/.config/configHyprland/listeners/monitor-autogen-noctalia.sh"
+
+
+    property string monitorScript: configuredScriptPath + "/monitor-actions.sh"
+    property string stateScript: configuredScriptPath + "/monitor-ui-state.sh"
 
     // =========================
     // PROCESSI
@@ -97,7 +105,6 @@ function setPrimary(m) {
 
     } else {
         selectedPrimary = "name:" + m.name
-
         run(`
             ${monitorScript} set-ws-per-monitor ${ws} &&
             ${monitorScript} clear-primary-serial &&

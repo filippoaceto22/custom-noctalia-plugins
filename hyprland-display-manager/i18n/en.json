@@ -17,6 +17,10 @@
         }
     },
     "settings": {
+        "scriptPath": {
+            "label": "Sript Folder",
+            "description": "Folder location for scripts."
+        },
         "enableCross": {
             "label": "Enable Crosshair",
             "description": "Whether to enable crosshair aiming."

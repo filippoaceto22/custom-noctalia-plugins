@@ -16,5 +16,17 @@
   },
   "dependencies": {
     "plugins": []
+  },
+  "metadata": {
+   "defaultSettings": {
+      "scriptPath": "~/.config/hypr/scripts/screenshotctl",
+      "enableCross": true,
+      "enableWindowsSelection": true,
+      "screenshotEditor": "swappy",
+      "keepSourceScreenshot": false,
+      "savePath": "~/Immagini/Screenshots",
+      "recordingSavePath": "~/Videos",
+      "recordingNotifications": true
+    }
   }
 }

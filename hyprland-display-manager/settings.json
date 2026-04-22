@@ -1,8 +1,13 @@
 {
+  "scriptPath": "/home/filippo/.config/noctalia/plugins/linked/scripts",
+  "enableCross": true,
+  "enableWindowsSelection": true,
+  "screenshotEditor": "swappy",
+  "keepSourceScreenshot": false,
+  "savePath": "/home/filippo/.config/noctalia/plugins/linked/scripts",
+  "recordingSavePath": "~/Videos",
+  "recordingNotifications": true,
   "scriptsPath": "~/.config/hypr/scripts/displayctl",
   "autoApply": true,
-  "defaultLayout": "line-right",
-  "enableWindowsSelection": true,
-  "enableCross": true,
-  "screenshotEditor": "swappy"
+  "defaultLayout": "line-right"
 }
