@@ -1,4 +1,5 @@
 name: Update Plugin Registry
+
 on:
   push:
     branches:
@@ -10,51 +11,64 @@ on:
     branches:
       - main
     paths:
-      - '**/manifest.json'  
+      - '**/manifest.json'
   workflow_dispatch:
+
+concurrency:
+  group: update-registry-main
+  cancel-in-progress: false
 
 jobs:
   update-registry:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
+    # Esegui il job solo sul tuo repo
     if: ${{ github.repository == 'filippoaceto22/custom-noctalia-plugins' }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
-      
+
+      # 🔥 FIX: allineati PRIMA di modificare file
+      - name: Prepare git (sync with remote)
+        if: github.event_name == 'push'
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git pull --rebase origin main
+
       - name: Run registry update script
         run: node .github/workflows/update-registry.mjs
-      
+
+      # 🔧 check più robusto
       - name: Check for changes
         id: check_changes
         run: |
-          if git diff --quiet registry.json; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-            echo "No changes to registry.json"
-          else
+          if [[ -n $(git status --porcelain registry.json) ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "Changes detected in registry.json"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes to registry.json"
           fi
-      
+
+      # 🔴 commit SOLO su push (non su PR)
       - name: Commit and push changes
-        if: steps.check_changes.outputs.changed == 'true'
+        if: steps.check_changes.outputs.changed == 'true' && github.event_name == 'push'
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git pull --rebase origin main
           git add registry.json
-          git commit -m "chore: update plugin registry [skip ci]"
-          git push
-      
+          git commit -m "chore: update plugin registry [skip ci]" || echo "Nothing to commit"
+          git push origin main
+
       - name: Upload registry artifact
         if: steps.check_changes.outputs.changed == 'true'
         uses: actions/upload-artifact@v7
