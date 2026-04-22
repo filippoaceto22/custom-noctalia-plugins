@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-04-22T07:36:12.907Z",
+  "generatedAt": "2026-04-22T14:22:58.880Z",
   "plugins": [
     {
       "id": "hyprland-display-manager",
@@ -16,7 +16,7 @@
         "Bar",
         "Panel"
       ],
-      "lastUpdated": "2026-04-22T09:36:00+02:00"
+      "lastUpdated": "2026-04-22T16:22:46+02:00"
     }
   ]
 }
