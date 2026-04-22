@@ -16,7 +16,6 @@ Item {
         workspaces: { value: 5, source: "default" },
         primary: { mode: "auto", value: "", currentName: "" },
         preferredSerial: "",
-        layouts: ["line-left","line-right","line-top","line-bottom","split-lr","split-tb"],
         monitors: []
     })
 

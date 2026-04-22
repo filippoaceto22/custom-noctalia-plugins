@@ -2,7 +2,9 @@
     "panel": {
         "title": "Display Manager",
         "workspaces": "Workspaces",
+        "workspacesDesc": "workspaces per monitor.",
         "dispositions": "Dispositions",
+        "dispositionsDesc": "Monitors arrangement",
         "set-primary": "Set Primary",
         "target": {
             "screenshot": "Screenshot",

@@ -12,22 +12,52 @@ Item {
     property var pluginApi: null
     property var main: pluginApi?.mainInstance
 
-    // ✅ SOLO QUI
+   
     readonly property var geometryPlaceholder: panelContainer
     readonly property bool allowAttach: true
 
     property real contentPreferredWidth: panelContainer.implicitWidth
     property real contentPreferredHeight: panelContainer.implicitHeight
 
-    // 🔴 QUESTO È IL FIX CHIAVE
     implicitWidth: contentPreferredWidth
     implicitHeight: contentPreferredHeight
+
+    property int localWs: main.pendingWs
+    property string selectedLayout: main?.pendingLayout ?? "line-left"
+
+    readonly property var layouts: [
+    {
+      key: "line-left",
+      name: "line-left"
+    },
+    {
+      key: "line-right",
+      name: "line-right"
+    },
+    {
+      key: "line-top",
+      name: "line-top"
+    },
+    {
+      key: "line-bottom",
+      name: "line-bottom"
+    },
+    {
+      key: "split-lr",
+      name: "split-lr"
+    },
+    {
+      key: "split-tb",
+      name: "split-tb"
+    }
+  ]
+
 
     // =========================
     NBox {
         id: panelContainer
 
-        implicitWidth: 360
+        implicitWidth: 450
         implicitHeight: content.implicitHeight + Style.marginM * 2
 
         ColumnLayout {
@@ -36,80 +66,76 @@ Item {
             anchors.margins: Style.marginM
             spacing: Style.marginM
 
-            // ================= HEADER
-            // ColumnLayout {
-            //     Layout.fillWidth: true
-
-            //     Label {
-            //         text: "Primary: " + (main?.stateData?.primary?.currentName || "-")
-            //         color: Color.mOnSurface
-            //     }
-
-            //     Label {
-            //         text: "Layout: " + main?.stateData?.layout?.value
-            //         color: Color.mOnSurfaceVariant
-            //     }
-
-            //     Label {
-            //         text: "Workspaces: " + main?.stateData?.workspaces?.value
-            //         color: Color.mOnSurfaceVariant
-            //     }
-            // }
 
             // ================= LAYOUT
             RowLayout {
                 Layout.fillWidth: true
 
-                Label {
-                    text:  pluginApi?.tr("panel.dispositions")
-                    color: Color.mOnSurface
-                }
 
-                ComboBox {
+
+                NComboBox {
                     Layout.fillWidth: true
-                    model: main?.stateData?.layouts || []
-
-                    onActivated: (i)=> {
-                        main.pendingLayout = model[i]
-                    }
+                    label: pluginApi?.tr("panel.dispositions")
+                    description: pluginApi?.tr("panel.dispositionsDesc")
+                    model: root.layouts
+                    currentKey: root.selectedLayout
+                   onSelected: key => {
+                         root.selectedLayout = key
+                         main.pendingLayout = key  
+                        }
                 }
+                
+
+                // ComboBox {
+                //     Layout.fillWidth: true
+                //     model: main?.stateData?.layouts || []
+
+                //     onActivated: (i)=> {
+                //         main.pendingLayout = model[i]
+                //     }
+                // }
 
                 NButton {
                     text: "Apply"
-                    onClicked: main.run(`${main.monitorScript} apply ${main.pendingLayout}`)
+                    onClicked: main.run(`${main.monitorScript} apply ${root.selectedLayout}`)
                 }
             }
 
-            // ================= WORKSPACES
-            RowLayout {
-                Layout.fillWidth: true
+        NDivider {
+          Layout.fillWidth: true
+        }
 
-                Label {
-                    text:  pluginApi?.tr("panel.workspaces")
-                    color: Color.mOnSurface
-                }
+               ColumnLayout {   // Panel Height (hidden when fullscreen)
+                 RowLayout {
+      NSpinBox {
+          Layout.fillWidth: true
+          visible: true
+          label: pluginApi?.tr("panel.workspaces")
+          description: pluginApi?.tr("panel.workspacesDesc")
+          from: 1
+          to: 20
+          stepSize: 1
+          value:main.pendingWs
+          onValueChanged: {
+            localWs = value
+           }
+      }
 
-                NButton {
-                    text: "-"
-                    onClicked: {
-                        main.pendingWs--
-                        main.run(`${main.monitorScript} set-ws-per-monitor ${main.pendingWs}`)
-                    }
-                }
+      NButton {
+         text: "Apply"
+        onClicked: {
+           main.pendingWs = localWs
+           main.run(`${main.monitorScript} set-ws-per-monitor ${localWs}`)
+        }
+        }
+      }
+}
 
-                Label {
-                    text: main.pendingWs
-                    color: Color.mOnSurface
-                }
 
-                NButton {
-                    text: "+"
-                    onClicked: {
-                        main.pendingWs++
-                        main.run(`${main.monitorScript} set-ws-per-monitor ${main.pendingWs}`)
-                    }
-                }
-            }
+          
+      NDivider {
+          Layout.fillWidth: true
+      }
 
             // ================= PRIMARY
             RowLayout {
@@ -124,14 +150,18 @@ Item {
             }
             ColumnLayout {
                 Layout.fillWidth: true
+                width: parent.width
 
                 Repeater {
                     model: main?.stateData?.monitors || []
 
-                    delegate: RowLayout {
+                    delegate: 
+                    RowLayout {
                         Layout.fillWidth: true
 
-                        RadioButton {
+                        NRadioButton {
+                            Layout.alignment: Qt.AlignLeft
+                            enabled:false
                             checked: main.selectedPrimary === main.monitorKey(modelData)
                         }
 
@@ -148,6 +178,10 @@ Item {
                     }
                 }
             }
+
+    NDivider {
+          Layout.fillWidth: true
+      }
 
             // ================= FOOTER
             RowLayout {
