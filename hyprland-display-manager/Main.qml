@@ -135,15 +135,6 @@ function setPrimary(m) {
             root.refresh()
         }
 
-        function stateUpdated(newState) {
-            try {
-                const parsed = JSON.parse(newState)
-                root.stateData = parsed
-                root.syncFromState()
-            } catch(e) {
-                console.error("JSON parse error", e)
-            }
-        }
 
 
     }
