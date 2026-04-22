@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    if: ${{ github.repository == 'filippo22/custom-noctalia-plugins' }}
+    if: ${{ github.repository == 'filippoaceto22/custom-noctalia-plugins' }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
