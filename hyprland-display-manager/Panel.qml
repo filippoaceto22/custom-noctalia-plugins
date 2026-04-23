@@ -129,7 +129,7 @@ NBox {
 
                         NButton {
                             text: "Apply"
-                            onClicked: main.run(`${main.monitorScript} apply $ {root.selectedLayout}`)
+                            onClicked: main.run(`${main.monitorScript} apply ${root.selectedLayout}`)
                         }
                     }
                 }
