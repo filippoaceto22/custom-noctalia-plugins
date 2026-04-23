@@ -43,9 +43,9 @@ NIconButton {
     }
   }
 
-  // onRightClicked: {
-  //   PanelService.showContextMenu(contextMenu, root, screen)
-  // }
+  onRightClicked: {
+    PanelService.showContextMenu(contextMenu, root, screen)
+  }
 
   NPopupContextMenu {
     id: contextMenu
