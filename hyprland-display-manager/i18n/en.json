@@ -18,7 +18,7 @@
     },
     "settings": {
         "scriptPath": {
-            "label": "Sript Folder",
+            "label": "Script Folder",
             "description": "Folder location for scripts."
         },
         "enableCross": {

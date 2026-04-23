@@ -1,204 +1,227 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
-
 import qs.Commons
-import qs.Widgets
 import qs.Services.UI
+import qs.Widgets
 
+// Panel Component
 Item {
     id: root
 
+    // Plugin API (injected by PluginPanelSlot)
     property var pluginApi: null
+
+
+
+    property real contentPreferredWidth: 400 + Style.marginM + 2
+    property real contentPreferredHeight: 350 + Style.marginM + 2
+
     property var main: pluginApi?.mainInstance
 
-   
+
     readonly property var geometryPlaceholder: panelContainer
     readonly property bool allowAttach: true
 
-    property real contentPreferredWidth: panelContainer.implicitWidth
-    property real contentPreferredHeight: panelContainer.implicitHeight
 
     implicitWidth: contentPreferredWidth
     implicitHeight: contentPreferredHeight
 
+    //anchors.fill: parent
+
+
     property int localWs: main.pendingWs
     property string selectedLayout: main?.pendingLayout ?? "line-left"
 
-    readonly property var layouts: [
-    {
-      key: "line-left",
-      name: "line-left"
+    readonly property var layouts: [{
+        key: "line-left",
+        name: "line-left"
     },
-    {
-      key: "line-right",
-      name: "line-right"
-    },
-    {
-      key: "line-top",
-      name: "line-top"
-    },
-    {
-      key: "line-bottom",
-      name: "line-bottom"
-    },
-    {
-      key: "split-lr",
-      name: "split-lr"
-    },
-    {
-      key: "split-tb",
-      name: "split-tb"
-    }
-  ]
+        {
+            key: "line-right",
+            name: "line-right"
+        },
+        {
+            key: "line-top",
+            name: "line-top"
+        },
+        {
+            key: "line-bottom",
+            name: "line-bottom"
+        },
+        {
+            key: "split-lr",
+            name: "split-lr"
+        },
+        {
+            key: "split-tb",
+            name: "split-tb"
+        }]
 
 
-    // =========================
-    NBox {
-        id: panelContainer
 
-        implicitWidth: 450
-        implicitHeight: content.implicitHeight + Style.marginM * 2
+
+NBox {
+   id: panelContainer
+    anchors.fill: parent
+    color: "transparent"
+
+
 
         ColumnLayout {
-            id: content
-            anchors.fill: parent
-            anchors.margins: Style.marginM
-            spacing: Style.marginM
-
-
-            // ================= LAYOUT
-            RowLayout {
-                Layout.fillWidth: true
-
-
-
-                NComboBox {
-                    Layout.fillWidth: true
-                    label: pluginApi?.tr("panel.dispositions")
-                    description: pluginApi?.tr("panel.dispositionsDesc")
-                    model: root.layouts
-                    currentKey: root.selectedLayout
-                   onSelected: key => {
-                         root.selectedLayout = key
-                         main.pendingLayout = key  
-                        }
-                }
-                
-
-                // ComboBox {
-                //     Layout.fillWidth: true
-                //     model: main?.stateData?.layouts || []
-
-                //     onActivated: (i)=> {
-                //         main.pendingLayout = model[i]
-                //     }
-                // }
-
-                NButton {
-                    text: "Apply"
-                    onClicked: main.run(`${main.monitorScript} apply ${root.selectedLayout}`)
-                }
+                id: mainColumn
+            anchors {
+                fill: parent
+                margins: Style.marginL
             }
 
-        NDivider {
-          Layout.fillWidth: true
-        }
-
-               ColumnLayout {   // Panel Height (hidden when fullscreen)
-                 RowLayout {
-      NSpinBox {
-          Layout.fillWidth: true
-          visible: true
-          label: pluginApi?.tr("panel.workspaces")
-          description: pluginApi?.tr("panel.workspacesDesc")
-          from: 1
-          to: 20
-          stepSize: 1
-          value:main.pendingWs
-          onValueChanged: {
-            localWs = value
-           }
-      }
-
-      NButton {
-         text: "Apply"
-        onClicked: {
-           main.pendingWs = localWs
-           main.run(`${main.monitorScript} set-ws-per-monitor ${localWs}`)
-        }
-        }
-      }
-}
-
-
-          
-      NDivider {
-          Layout.fillWidth: true
-      }
-
-            // ================= PRIMARY
             RowLayout {
+                id: titleRow
                 Layout.fillWidth: true
+                spacing: Style.marginS
 
-                Label {
-                    text:  pluginApi?.tr("panel.set-primary")
+                NIcon {
+                    icon: "devices"
+                    pointSize: Style.fontSizeL
+                    color: Color.mPrimary
+                }
+
+                NText {
+                    text: pluginApi?.tr("panel.title")
+                    pointSize: Style.fontSizeL
+                    font.weight: Style.fontWeightBold
                     color: Color.mOnSurface
+                    Layout.fillWidth: true
+                    wrapMode: Text.WordWrap
                 }
-
-
             }
-            ColumnLayout {
+
+            Rectangle {
                 Layout.fillWidth: true
-                width: parent.width
+                Layout.preferredHeight: disposition.implicitHeight + Style.marginM * 2
+                color: Color.mSurfaceVariant
+                radius: Style.radiusM
 
-                Repeater {
-                    model: main?.stateData?.monitors || []
+                ColumnLayout {
+                    id: disposition
+                    anchors {
+                        fill: parent
+                        margins: Style.marginM
+                    }
+                    spacing: Style.marginS
 
-                    delegate: 
                     RowLayout {
                         Layout.fillWidth: true
+                        spacing: Style.marginS
 
-                        NRadioButton {
-                            Layout.alignment: Qt.AlignLeft
-                            enabled:false
-                            checked: main.selectedPrimary === main.monitorKey(modelData)
-                        }
 
-                        Label {
+
+                        NComboBox {
                             Layout.fillWidth: true
-                            text: modelData.name
-                            color: Color.mOnSurface
+                            label: pluginApi?.tr("panel.dispositions")
+                            description: pluginApi?.tr("panel.dispositionsDesc")
+                            model: root.layouts
+                            currentKey: root.selectedLayout
+                            onSelected: key => {
+                                root.selectedLayout = key
+                                main.pendingLayout = key
+                            }
                         }
 
                         NButton {
-                            text: "Set"
-                            onClicked: main.setPrimary(modelData)
+                            text: "Apply"
+                            onClicked: main.run(`${main.monitorScript} apply $ {root.selectedLayout}`)
                         }
                     }
                 }
             }
 
-    NDivider {
-          Layout.fillWidth: true
-      }
 
-            // ================= FOOTER
-            RowLayout {
+            Rectangle {
                 Layout.fillWidth: true
+                Layout.preferredHeight: wsColumn.implicitHeight + Style.marginM * 2
+                color: Color.mSurfaceVariant
+                radius: Style.radiusM
 
-                NButton {
-                    text: "Refresh"
-                    onClicked: main.refresh()
-                }
+                ColumnLayout {
+                    id: wsColumn
+                    anchors {
+                        fill: parent
+                        margins: Style.marginM
+                    }
+                    spacing: Style.marginS
 
-                Item { Layout.fillWidth: true }
+                    RowLayout {
+                        NSpinBox {
+                            Layout.fillWidth: true
+                            visible: true
+                            label: pluginApi?.tr("panel.workspaces")
+                            description: pluginApi?.tr("panel.workspacesDesc")
+                            from: 1
+                            to: 20
+                            stepSize: 1
+                            value:main.pendingWs
+                            onValueChanged: {
+                                localWs = value
+                            }
+                        }
 
-                NButton {
-                    text: "Close"
-                    onClicked: pluginApi.closePanel(pluginApi.panelOpenScreen)
+                        NButton {
+                            text: "Apply"
+                            onClicked: {
+                                main.pendingWs = localWs
+                                main.run(`${main.monitorScript} set-ws-per-monitor ${localWs}`)
+                            }
+                        }
+                    }
                 }
             }
+
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.preferredHeight: primary.implicitHeight + Style.marginM * 2
+                color: Color.mSurfaceVariant
+                radius: Style.radiusM
+
+                ColumnLayout {
+                    id: primary
+                    anchors {
+                        fill: parent
+                        margins: Style.marginM
+                    }
+                    spacing: Style.marginS
+                    NText {
+                        text: pluginApi?.tr("panel.set-primary")
+                        font.pointSize: Style.fontSizeM * Style.uiScaleRatio
+                        font.weight: Font.Medium
+                        color: Color.mOnSurface
+                    }
+                    Repeater {
+                        model: main?.stateData?.monitors || []
+
+                        delegate:
+                        RowLayout {
+                            Layout.fillWidth: true
+
+                            NRadioButton {
+                                Layout.alignment: Qt.AlignLeft
+                                enabled:false
+                                checked: main.selectedPrimary === main.monitorKey(modelData)
+                            }
+
+                            NLabel {
+                                Layout.fillWidth: true
+                                label: modelData.name
+                            }
+
+                            NButton {
+                                text: "Set"
+                                onClicked: main.setPrimary(modelData)
+                            }
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

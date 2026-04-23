@@ -31,7 +31,6 @@ Item {
                                          ?? pluginApi?.manifest?.metadata?.defaultSettings?.scriptPath
                                          ?? ""
 
-    //property string monitorScript: "/home/filippo/.config/configHyprland/listeners/monitor-autogen-noctalia.sh"
 
 
     property string monitorScript: configuredScriptPath + "/monitor-actions.sh"
@@ -41,8 +40,8 @@ Item {
     // PROCESSI
     // =========================
     Process {
-    id: proc
-}
+       id: proc
+    }
 
     Process {
         id: stateProc
